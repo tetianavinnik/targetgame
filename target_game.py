@@ -60,7 +60,7 @@ def get_words(f: str, letters: List[str]) -> List[str]:
                 count += 1
             if count == 0:
                 possible_words.append(line)
-        print(possible_words)
+        #print(possible_words)
 
         possible_words_list = possible_words.copy()
         for word in possible_words:
@@ -77,6 +77,7 @@ def get_words(f: str, letters: List[str]) -> List[str]:
                         del lst_line[index_letter:index_letter+number_of_letter]
                         letters_in_line_tpl.append(tpl_line)
                         lst_line = sorted(lst_line)
+
             for r in letters_copy:
                 if r not in lst_line_copy:
                     letters_in_line_tpl.append((r, 0))
@@ -91,19 +92,27 @@ def get_words(f: str, letters: List[str]) -> List[str]:
             for h in range(len(grid_tpl_lst)):
                 if grid_tpl_lst[h][1] < letters_in_line_tpl[h][1]:
                     possible_words_list.remove(word)
-    
-    print(possible_words_list)
-    
+    #print(possible_words_list)
+    return possible_words_list
 
 
-get_words('en.txt', generate_grid())
+#get_words('en.txt', generate_grid())
 
 def get_user_words() -> List[str]:
     """
     Gets words from user input and returns a list with these words.
     Usage: enter a word or press ctrl+d to finish.
     """
-    pass
+    letters = generate_grid()
+    try:
+        user_list = []
+        m = 0
+        while m != 1:
+            inp_word = input()
+            user_list.append(inp_word)
+    except KeyboardInterrupt:
+        return user_list
+    
 
 
 def get_pure_user_words(user_words: List[str], letters: List[str], words_from_dict: List[str]) -> List[str]:
@@ -113,8 +122,68 @@ def get_pure_user_words(user_words: List[str], letters: List[str], words_from_di
     Checks user words with the rules and returns list of those words
     that are not in dictionary.
     """
-    pass
+    pure_lst = []
+    for i in user_words:
+        if i not in words_from_dict:
+            pure_lst.append(i)
+    for n in pure_lst:
+        if len(n) < 4:
+            pure_lst.remove(n)
+        else:
+            if letters[4] not in n:
+                pure_lst.remove(n)
+            else:
+                for k in n:
+                    if k not in letters:
+                        pure_lst.remove(n)
 
+    grid_tpl_lst = []
+    letters = sorted(letters)
+    letters_copy = letters.copy()
+    while letters != []:
+        for n in letters:
+            number_of_letter = letters.count(n)
+            tpl_letter = (n, number_of_letter)
+            index_letter = letters.index(n)
+            del letters[index_letter:index_letter+number_of_letter]
+            grid_tpl_lst.append(tpl_letter)
+    grid_tpl_lst = sorted(grid_tpl_lst, key=operator.itemgetter(0))
+
+    possible_words_list = pure_lst.copy()
+    for word in pure_lst:
+        letters_in_line_tpl = []
+        lst_line = list(word)
+        lst_line = sorted(lst_line)
+        lst_line_copy = lst_line.copy()
+        while lst_line != []:
+            for n in lst_line:
+                if n in lst_line:
+                    number_of_letter = lst_line.count(n)
+                    tpl_line = (n, number_of_letter)
+                    index_letter = lst_line.index(n)
+                    del lst_line[index_letter:index_letter+number_of_letter]
+                    letters_in_line_tpl.append(tpl_line)
+                    lst_line = sorted(lst_line)
+
+    lst_line_copy = lst_line.copy()
+    letters_copy = letters.copy()
+    for r in letters_copy:
+        if r not in lst_line_copy:
+            letters_in_line_tpl.append((r, 0))
+    letters_in_line_tpl = sorted(letters_in_line_tpl, key=operator.itemgetter(0))        
+    t = 0
+    while t != len(letters_in_line_tpl)-2:
+        if letters_in_line_tpl[t] == letters_in_line_tpl[t+1]:
+            del letters_in_line_tpl[t]
+        t += 1
+        if t == len(letters_in_line_tpl)-2:
+            break
+    for h in range(len(grid_tpl_lst)):
+        if grid_tpl_lst[h][1] < letters_in_line_tpl[h][1]:
+            possible_words_list.remove(word)
+
+    print(possible_words_list)
+    return possible_words_list
 
 def results():
-    pass
+    
