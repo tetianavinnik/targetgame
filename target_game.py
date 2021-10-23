@@ -3,6 +3,7 @@ import string
 import random
 import operator
 
+
 def generate_grid() -> List[List[str]]:
     """
     Generates list of lists of letters - i.e. grid for the game.
@@ -78,7 +79,8 @@ def get_words(f: str, letters: List[str]) -> List[str]:
             for r in letters_copy:
                 if r not in lst_line_copy:
                     letters_in_line_tpl.append((r, 0))
-            letters_in_line_tpl = sorted(letters_in_line_tpl, key=operator.itemgetter(0))        
+            letters_in_line_tpl = sorted(letters_in_line_tpl,
+                                         key=operator.itemgetter(0))
             t = 0
             while t != len(letters_in_line_tpl)-2:
                 if letters_in_line_tpl[t] == letters_in_line_tpl[t+1]:
@@ -106,10 +108,10 @@ def get_user_words() -> List[str]:
             user_list.append(inp_word)
     except KeyboardInterrupt:
         return user_list
-    
 
 
-def get_pure_user_words(user_words: List[str], letters: List[str], words_from_dict: List[str]) -> List[str]:
+def get_pure_user_words(user_words: List[str], letters: List[str],
+                        words_from_dict: List[str]) -> List[str]:
     """
     (list, list, list) -> list
 
@@ -163,7 +165,8 @@ def get_pure_user_words(user_words: List[str], letters: List[str], words_from_di
         for r in letters_copy:
             if r not in lst_line_copy:
                 letters_in_line_tpl.append((r, 0))
-        letters_in_line_tpl = sorted(letters_in_line_tpl, key=operator.itemgetter(0))        
+        letters_in_line_tpl = sorted(letters_in_line_tpl,
+                                     key=operator.itemgetter(0))
         t = 0
         while t != len(letters_in_line_tpl)-2:
             if letters_in_line_tpl[t] == letters_in_line_tpl[t+1]:
@@ -183,7 +186,8 @@ def results():
     letters = generate_grid()
     dictionary_words = get_words("en.txt", letters)
     user_words = get_user_words()
-    not_dictionary_words = get_pure_user_words(user_words, letters, dictionary_words)
+    not_dictionary_words = get_pure_user_words(user_words,
+                                               letters, dictionary_words)
     missing_words = []
     for p in dictionary_words:
         if p not in user_words:
@@ -199,7 +203,7 @@ def results():
             output_file.write(i + '\n')
         for n in not_dictionary_words:
             output_file.write(n + '\n')
-    
+
     print(points)
     print(missing_words)
     print(not_dictionary_words)
